@@ -16,8 +16,20 @@ module.exports = {
       console.log((`Servers: ${client.guilds.cache.size}`).magenta, (`Users: ${client.guilds.cache
         .reduce((a, b) => a + b.memberCount, 0)
         .toLocaleString()}`).yellow, (`Commands: ${client.commands.size}`).green);
-      client.user.setStatus("idle")
-      client.user.setActivity(`${prefix}help | SlashCommand`, { type: ActivityType.Listening })
+      console.log((`Prefix : ${prefix}`).cyan);
+      console.log((`Bot ID : ${client.user.id}`).red);
+      client.user.setStatus("dnd")
+            const activities_list = [
+        `${prefix}help`,
+              `${prefix}play`,
+              `${prefix}about`
+      ];
+
+      setInterval(() => {
+        const index = Math.floor(Math.random() * activities_list.length);
+        client.user.setActivity(activities_list[index], { type: ActivityType.Playing});
+      }, 10000);
+      
       setInterval(async () => {
         client.guilds.cache.forEach(async g => {
           let vch = await db.get(`24_7_${g.id}`)
