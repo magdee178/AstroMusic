@@ -385,7 +385,7 @@ distube.on("addSong", (queue, song) => {
 					}),
 			],
 		},
-			console.log(`addSong ${song.name}`)
+			//console.log(`addSong ${song.name}`)
 		);
 	} catch (err) {
 		console.log(err);
@@ -419,7 +419,7 @@ distube.on("playList", (message, queue, playlist, song) => {
 						}),
 				],
 			},
-			console.log(`playList ${playlist.name} - ${playlist.songs.length}`)
+			//console.log(`playList ${playlist.name} - ${playlist.songs.length}`)
 		);
 	} catch (err) {
 		console.log(err);
@@ -443,7 +443,7 @@ distube.on("addList", (queue, playlist) => {
 						}),
 				],
 			},
-			console.log(`addList ${playlist.name} - ${playlist.songs.length - 1}`)
+			//console.log(`addList ${playlist.name} - ${playlist.songs.length - 1}`)
 		);
 	} catch (err) {
 		console.log(err);
@@ -452,7 +452,7 @@ distube.on("addList", (queue, playlist) => {
 
 distube.on("noRelated", (queue) => {
 	try {
-		console.log("Can't find related video to play.");
+		//console.log("Can't find related video to play.");
 	} catch (err) {
 		console.log(err);
 	}
@@ -484,8 +484,8 @@ distube.on(`deleteQueue`, (queue) => {
 						currentSongPlayMsg.edit({ embeds: [embed], components: [] })
 					}
 				}, 1000)
-			}).catch((e) => { }),
-			console.log(`finish queue`);
+			}).catch((e) => { });
+			//console.log(`finish queue`);
 	} catch (err) {
 		console.log(err);
 	}
@@ -499,8 +499,8 @@ distube.on("finish", (queue) => {
 				setTimeout(() => {
 					currentSongPlayMsg.edit({ components: [] })
 				}, 1000)
-			}).catch((e) => { }),
-			console.log(`finish`);
+			}).catch((e) => { });
+			//console.log(`finish`);
 	} catch (err) {
 		console.log(err);
 	}
@@ -522,9 +522,9 @@ distube.on(`finishSong`, (queue, song) => {
 				setTimeout(() => {
 					currentSongPlayMsg.edit({ embeds: [embed], components: [] })
 				}, 1000)
-			}).catch((e) => { }),
+			}).catch((e) => { });
 
-			console.log(`finishSong ${song.name}`);
+			//console.log(`finishSong ${song.name}`);
 	} catch (err) {
 		console.log(err);
 	}
@@ -538,8 +538,8 @@ distube.on("disconnect", (queue) => {
 				setTimeout(() => {
 					currentSongPlayMsg.edit({ components: [] })
 				}, 1000)
-			}).catch((e) => { }),
-			console.log(`The voice channel is Disconnected! Leaving the voice channel!`);
+			}).catch((e) => { });
+			//console.log(`The voice channel is Disconnected! Leaving the voice channel!`);
 	} catch (err) {
 		console.log(err);
 	}
@@ -553,8 +553,8 @@ distube.on("empty", (queue) => {
 				setTimeout(() => {
 					currentSongPlayMsg.edit({ components: [] })
 				}, 1000)
-			}).catch((e) => { }),
-			console.log(`The voice channel is empty! Leaving the voice channel!`);
+			}).catch((e) => { });
+			//console.log(`The voice channel is empty! Leaving the voice channel!`);
 	} catch (err) {
 		console.log(err);
 	}
