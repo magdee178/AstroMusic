@@ -25,8 +25,6 @@ const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const db = require('quick.db');
 const colors = require("colors");
-// const pathToFfmpeg = require('ffmpeg-static')
-// console.log(pathToFfmpeg)
 
 const client = new Client({
   intents: [
@@ -129,12 +127,6 @@ client.slashCommands = new Collection();
 const commands = client.slashCommands.map(({ execute, ...data }) => data);
 
 // Register slash commands
-const rest = new REST({ version: '9' }).setToken(config.token || process.env.token);
-rest.put(
-  Routes.applicationGuildCommands(config.clientID, config.guildID),
-  { body: commands },
-).then(() => console.log('Successfully registered application commands.'))
-  .catch(console.error)
 
 
 setTimeout(() => {
@@ -146,6 +138,17 @@ setTimeout(() => {
   }
 }, 5 * 1000 * 60);
 
-client.login(config.token || process.env.token).catch((err) => {
+client.login(config.token || process.env.token).then((bot)=>{
+
+const rest = new REST({ version: '9' }).setToken(config.token || process.env.token);
+rest.put(
+  Routes.applicationCommands(config.clientID),
+  { body: commands },
+).then(() => console.log('Successfully registered application commands.'))
+  .catch(console.error);
+  
+}).catch((err) => {
   console.log(err.message)
 })
+
+  
