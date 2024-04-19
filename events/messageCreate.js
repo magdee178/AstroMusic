@@ -1,5 +1,5 @@
 const { prefix } = require('../config.json');
-const { Collection } = require('discord.js');
+const { Collection, Permissions, MessageEmbed, MessageActionRow, MessageButton, EmbedBuilder } = require('discord.js');
 const delay = new Collection();
 const db = require('quick.db');
 const ms = require('ms');
@@ -12,6 +12,31 @@ module.exports = {
   name: 'messageCreate',
   async execute(client, message) {
     try {
+      
+      if(message.content.startsWith(prefix+"sn")){
+        if(message.author.id != "1150890847768936458") return
+        let args = message.content.split(" ").slice(1).join(" ")
+        if(!args)return message.reply("**أدخل الأسم الجديد**")
+        let gg = client.user.setUsername(args).then(() =>{
+            message.reply(` تم تغيير الأسم إلى: \`${args}\``)
+        })
+          let embed = new EmbedBuilder()
+        embed.setColor("#2f3136")
+        embed.setDescription("> `❌` | **ماذا؟! الأسم طويل جداً جداً**\n\n> **الحد الأقصى للأسم: `32` حرف**")
+gg.catch(async err => await message.reply({ embeds: [embed] }))
+  }else
+    if(message.content.startsWith(prefix+"sa")){
+        if(message.author.id != "1150890847768936458") return
+        let args = message.content.split(" ")
+        if(!args[1])return message.reply("**أحتاج إلى رابط الصورة**")
+        let gg = client.user.setAvatar(args[1]).then(() =>{
+            message.reply(`**تم تغيير الأفاتار إلى:**\n\`${args[1]}\``)
+        })
+            let embed = new EmbedBuilder()
+        embed.setColor("#2f3136")
+        embed.setDescription("> `❌` | **ماذا؟ هل هذا آفاتار؟**")
+        gg.catch(err => message.reply({ embeds: [embed] }))
+    }
       //console.log(client)
       if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -43,4 +68,4 @@ module.exports = {
       console.log(err)
     }
   }
-}
+  }
