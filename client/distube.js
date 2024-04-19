@@ -8,6 +8,7 @@ const {
 	StringSelectBuilder,
 } = require("discord.js");
 const client = require("../index");
+const prefix = require('../config.json');
 const config = require("../config.json");
 const { DisTube, Song, SearchResultVideo } = require("distube");
 const { DeezerPlugin } = require("@distube/deezer");
@@ -77,8 +78,6 @@ distube.on("initQueue", (queue) => {
 	queue.volume = 100;
 });
 
-
-let songEditInterval;
 distube.on(`playSong`, async (queue, track) => {
 	try {
 		var newQueue = distube.getQueue(queue.id);
@@ -208,6 +207,40 @@ distube.on(`playSong`, async (queue, track) => {
 					console.log(e);
 				});
 			}
+      			if (i.customId == `0`) {
+				let { member } = i;
+
+				const { channel } = member.voice;
+
+				if (!channel)
+					return i.reply({
+						content: `:no_entry_sign: You must join a voice channel to use that!`,
+						ephemeral: true,
+					});
+
+				if (channel.id !== newQueue.voiceChannel.id)
+					return i.reply({
+						content: `:no_entry_sign: You must be listening in \`${channel.name}\` to use that!`,
+						ephemeral: true,
+					});
+     var embed = new EmbedBuilder()
+			.setAuthor({ name: `${client.user.username}`, url: `${client.user.avatarURL({ dynamic: true })}` })
+			.setColor("#ff0000")
+			.setDescription(`**للتواصل مع المطور:** __[اضغط هنا](https://discord.com/users/1150890847768936458)__\n**سيرفر الدعم الفني:** __[SOON](https://twitch.tv/4egy)__`);
+		i.reply({ embeds: [embed], ephemeral: true })
+			/*	i.reply({
+					content: `hi`
+				});*/
+				//await wait(7000);
+			//	await i.deleteReply()
+				var data = receiveQueueData(
+					distube.getQueue(queue.id),
+					newQueue.songs[0]
+				);
+				currentSongPlayMsg.edit(data).catch((e) => {
+					console.log(e);
+				});
+            }
 			//Rewind
 			if (i.customId == `9`) {
 				let { member } = i;
@@ -343,11 +376,12 @@ distube.on("addSong", (queue, song) => {
 				new EmbedBuilder()
 
 					.setAuthor({ name: `Add song` })
-					.setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
-					.setDescription(`**[${song.name}](${song.url})**`)
+					.setThumbnail(`https://cdn.discordapp.com/attachments/1209398050074796042/1229652573095723058/Picsart_24-04-16_06-28-37-009.png?ex=66307633&is=661e0133&hm=3c9bd14cd6047a10b18f20a7b68720db3ded924f3f5673ee2768007ffb140def&`)
+					.setDescription(`**_Song Name:_** [${song.name}](${song.url})\n**_Duraion:_**   [\`${song.formattedDuration}\`]\n**_Added by:_**\n${song.user}`)
+        .setTimestamp()
 					.setFooter({
-						text: `Added by ${song.user.username}   |  Duration: [${song.formattedDuration}]`,
-						iconURL: song.user.avatarURL(),
+            text: `${queue.textChannel.guild.name}`,
+            iconURL: `https://img.youtube.com/vi/${song.id}/mqdefault.jpg`
 					}),
 			],
 		},
@@ -586,51 +620,61 @@ function receiveQueueData(newQueue, newTrack) {
 		var embed = new EmbedBuilder()
 
 			.setAuthor({ name: `Now Playing` })
-			.setThumbnail(`https://img.youtube.com/vi/${newTrack.id}/mqdefault.jpg`)
-			.setDescription(`**[${newTrack.name}](${newTrack.url})**`)
-			.addFields({
-				name: `Download Song`,
-				value: `[Click here](${newTrack.streamURL})`,
-				inline: true,
-			})
+			.setThumbnail(`https://cdn.discordapp.com/attachments/1209398050074796042/1229652560575594536/Picsart_24-04-16_06-30-23-925.png?ex=66307630&is=661e0130&hm=be46fbb77e59aad6d16e3aef3092aaa9cb07e732125a0483259e83d02fe8b9b8&`)
+			.setDescription(`**_Song Name:_** [${newTrack.name}](${newTrack.url})`)
 			.addFields({
 				name: `Current Duration:`,
-				value: `\`[${newQueue.formattedCurrentTime}/${newTrack.formattedDuration}]\``,
+				value: `\`${newQueue.formattedCurrentTime}/${newTrack.formattedDuration}\``,
 				inline: true,
 			})
+      .addFields({
+        name: `Reqeuster:`,
+        value: `<@${newTrack.user.id}>`,
+        inline: true,
+      })
 			.setFooter({
-				text: `Added by ${newTrack.user.username}  |  Volume: ${newQueue.volume}%  |  Queue length: ${newQueue.songs.length - 1} `,
+				text: `Volume: ${newQueue.volume}%`,
 				iconURL: newTrack.user.avatarURL(),
-			});		
-
+			})
+    .setTimestamp();
+    
 		let pause = new ButtonBuilder()
 			.setStyle("Secondary")
 			.setCustomId("3")
-			.setEmoji("1031533069238292520");
+      .setLabel("P/R")
+			.setEmoji("<:pause_ma:1229652940004786261>");
 
-		let forward = new ButtonBuilder()
+		/*let forward = new ButtonBuilder()
 			.setStyle("Secondary")
 			.setCustomId("8")
 			.setEmoji("1024997006382473288"); //.setLabel(`+10 Sec`)
 		let rewind = new ButtonBuilder()
 			.setStyle("Secondary")
 			.setCustomId("9")
-			.setEmoji("1024997936196751430"); //.setLabel(`-10 Sec`)
+			.setEmoji("1024997936196751430"); //.setLabel(`-10 Sec`) */
 		let volumeup = new ButtonBuilder()
 			.setStyle("Secondary")
 			.setCustomId("11")
-			.setEmoji("1024998653640851537");
+      .setLabel("Vol_UP")
+			.setEmoji("<:Vol_up:1229653118996713522>");
 		let volumedown = new ButtonBuilder()
 			.setStyle("Secondary")
 			.setCustomId("12")
-			.setEmoji("1024999026069872640");
+      .setLabel("Vol_Down")
+			.setEmoji("<:vol_down:1229653227721588746>");
+    let about = new ButtonBuilder()
+			.setStyle("Secondary")
+			.setCustomId("0")
+      .setLabel("Developer")
+			.setEmoji("<:dev_ma:1229652686711033856>");
 
 		const row = new ActionRowBuilder().addComponents([
 			volumedown,
-			rewind,
+		//	rewind,
 			pause,
-			forward,
+			//forward,
 			volumeup,
+      about,
 		]);
 
 		return {
@@ -643,3 +687,4 @@ function receiveQueueData(newQueue, newTrack) {
 }
 
 module.exports = distube;
+		
